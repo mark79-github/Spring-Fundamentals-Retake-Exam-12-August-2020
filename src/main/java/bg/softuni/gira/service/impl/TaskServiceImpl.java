@@ -1,12 +1,17 @@
 package bg.softuni.gira.service.impl;
 
 import bg.softuni.gira.model.entity.Task;
+import bg.softuni.gira.model.entity.enumerated.Progress;
 import bg.softuni.gira.model.service.TaskServiceModel;
 import bg.softuni.gira.repository.TaskRepository;
 import bg.softuni.gira.service.TaskService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -25,5 +30,31 @@ public class TaskServiceImpl implements TaskService {
         Task task = this.modelMapper.map(taskServiceModel, Task.class);
 
         this.taskRepository.saveAndFlush(task);
+    }
+
+    @Override
+    public List<TaskServiceModel> getAllTasks() {
+        return this.taskRepository.findAll()
+                .stream()
+                .map(task -> this.modelMapper.map(task, TaskServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TaskServiceModel getTaskById(String id) {
+        return this.taskRepository
+                .findById(id)
+                .map(task -> this.modelMapper.map(task, TaskServiceModel.class))
+                .orElse(null);
+    }
+
+    @Override
+    public TaskServiceModel editProgress(TaskServiceModel taskServiceModel) {
+        Progress progress = taskServiceModel.getProgress();
+        int nextOrdinal = (progress.ordinal() + 1) % Progress.values().length;
+        List<Progress> progresses = Arrays.stream(Progress.values()).collect(Collectors.toList());
+        taskServiceModel.setProgress(progresses.get(nextOrdinal));
+        Task task = this.taskRepository.saveAndFlush(this.modelMapper.map(taskServiceModel, Task.class));
+        return this.modelMapper.map(task, TaskServiceModel.class);
     }
 }

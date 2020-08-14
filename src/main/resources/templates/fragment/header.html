@@ -5,12 +5,20 @@
       </span>
         <a class="navbar-brand active col-md-1 title" href="/">Gira</a>
         <div class="collapse navbar-collapse  d-flex justify-content-end">
-            <ul class="navbar-nav row">
+            <ul th:if="${session.isEmpty()}" class="navbar-nav row">
                 <li class="nav-item col-md-5">
                     <a class="button" href="/user/login">Login</a>
                 </li>
                 <li class="nav-item col-md-5">
                     <a class="button" href="/user/register">Register</a>
+                </li>
+            </ul>
+            <ul th:unless="${session.isEmpty()}" class="navbar-nav row">
+                <li class="nav-item col-md-6">
+                    <a class="button text-nowrap" href="/task/add">Add Task</a>
+                </li>
+                <li class="nav-item col-md-5">
+                    <a class="button" href="/user/logout">Logout</a>
                 </li>
             </ul>
         </div>

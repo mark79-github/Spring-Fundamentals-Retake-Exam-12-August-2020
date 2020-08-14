@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static bg.softuni.gira.constraint.Global.*;
@@ -53,25 +54,26 @@ public class UserController {
     public String loginConfirm(@Valid
                                @ModelAttribute(name = "userLoginBindingModel") UserLoginBindingModel userLoginBindingModel,
                                BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes,
+                               HttpSession httpSession) {
 
         if (bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel", bindingResult);
-            redirectAttributes.addFlashAttribute("notFound", true);
+            redirectAttributes.addFlashAttribute("notFound", false);
             return "redirect:/user/login";
         }
 
         UserServiceModel userServiceModel = this.userService.getUserByEmail(userLoginBindingModel.getEmail());
 
-        if (userServiceModel == null || !userServiceModel.getPassword().equals(bCryptPasswordEncoder.encode(userLoginBindingModel.getPassword()))){
+        if (userServiceModel == null || !bCryptPasswordEncoder.matches(userLoginBindingModel.getPassword(), userServiceModel.getPassword())){
             redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel", bindingResult);
             redirectAttributes.addFlashAttribute("notFound", true);
             return "redirect:/user/login";
         }
 
-        return "home";
+        httpSession.setAttribute("user", userServiceModel.getEmail());
+        return "redirect:/home";
     }
 
     @GetMapping("/register")
@@ -121,5 +123,15 @@ public class UserController {
         this.userService.addUser(userServiceModel);
 
         return "register";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession){
+
+        if (httpSession.getAttribute("user") != null){
+            httpSession.invalidate();
+        }
+
+        return "redirect:/";
     }
 }

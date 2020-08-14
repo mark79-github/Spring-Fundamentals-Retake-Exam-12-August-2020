@@ -25,9 +25,9 @@ public class Task extends BaseEntity {
     @Column(name = "due_date", nullable = false)
     @FutureOrPresent(message = DUE_DATE_VALIDATION_MSG)
     private LocalDate dueDate;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, optional = false)
     private Classification classification;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, optional = false)
     private User user;
 
     public Task() {

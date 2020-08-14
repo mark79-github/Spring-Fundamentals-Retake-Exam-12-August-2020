@@ -1,6 +1,6 @@
 package bg.softuni.gira.model.entity.enumerated;
 
-public enum ClassificaionName {
+public enum ClassificationName {
     BUG("Bug"),
     FEATURE("Feature"),
     SUPPORT("Support"),
@@ -8,7 +8,7 @@ public enum ClassificaionName {
 
     private String name;
 
-    ClassificaionName(String name) {
+    ClassificationName(String name) {
         this.name = name;
     }
 

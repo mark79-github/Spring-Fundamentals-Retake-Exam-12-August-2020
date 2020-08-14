@@ -1,20 +1,13 @@
-package bg.softuni.gira.model.entity;
+package bg.softuni.gira.model.service;
 
 import bg.softuni.gira.model.entity.enumerated.ClassificationName;
 
-import javax.persistence.*;
+public class ClassificationServiceModel extends BaseServiceModel {
 
-@Entity
-@Table(name = "classifications")
-public class Classification extends BaseEntity{
-
-    @Column(name = "classification_name", nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
     private ClassificationName classificationName;
-    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    public Classification() {
+    public ClassificationServiceModel() {
     }
 
     public ClassificationName getClassificationName() {

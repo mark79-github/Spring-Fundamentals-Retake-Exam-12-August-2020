@@ -9,8 +9,12 @@ public class Global {
     public static final String EMAIL_VALID_MSG = "Email must be valid";
     public static final String DESCRIPTION_LENGTH_MSG = "Description min length must be minimum 5 characters";
     public static final String DUE_DATE_VALIDATION_MSG = "Due date cannot be in the past";
+    public static final String DUE_DATE_EMPTY_MSG = "Due date cannot be empty";
     public static final String USER_EXISTS = "username is already taken";
     public static final String EMAIL_EXISTS = "email is already taken";
     public static final String CONFIRM_PASSWORD_NOT_MATCH = "confirm password do not match";
     public static final String WRONG_CREDENTIALS = "Incorrect email or password";
+    public static final String CLASSIFICATION_NOT_NULL = "Classification cant be empty";
+    public static final String CLASSIFICATION_DESCRIPTION = "Description for %s";
+
 }

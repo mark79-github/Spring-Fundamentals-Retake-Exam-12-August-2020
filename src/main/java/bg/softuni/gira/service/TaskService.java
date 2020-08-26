@@ -11,6 +11,6 @@ public interface TaskService {
 
     TaskServiceModel getTaskById(String id);
 
-    TaskServiceModel editProgress(TaskServiceModel taskServiceModel);
+    void editProgress(TaskServiceModel taskServiceModel);
 }
 

@@ -26,8 +26,13 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index() {
-        return "index";
+    public String index(HttpSession httpSession) {
+
+        if (httpSession.getAttribute("user") == null) {
+            return "index";
+        }
+
+        return "redirect:/home";
     }
 
     @GetMapping("/home")

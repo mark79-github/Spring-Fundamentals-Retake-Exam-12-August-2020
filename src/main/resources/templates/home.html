@@ -7,7 +7,7 @@
     <main class="content-wrap">
         <h1 class="text-center mt-2"><span class="badge badge-pill badge-dark">Tasks</span></h1>
         <hr class="hr-3 w-75 bg-white"/>
-        <form class="mx-auto w-75" method="post" th:action="@{/task/{id}(id = *{id})}" th:each="task : ${tasks}" th:object="${task}">
+        <form class="mx-auto w-75" th:each="task : ${tasks}" th:object="${task}">
 
             <div class="card-group task-card">
                 <div class="card">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <a class="button prBtn" th:text="*{id}">Progress</a>
+                <a class="button prBtn" th:href="@{/task/{id}(id = *{id})}">Progress</a>
             </div>
 
         </form>

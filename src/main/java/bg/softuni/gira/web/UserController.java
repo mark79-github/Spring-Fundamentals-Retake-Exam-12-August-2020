@@ -37,13 +37,18 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login(Model model,
+                        HttpSession httpSession) {
 
-        if (!model.containsAttribute("userLoginBindingModel")){
+        if (httpSession.getAttribute("user") != null) {
+            return "redirect:/";
+        }
+
+        if (!model.containsAttribute("userLoginBindingModel")) {
             model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
         }
 
-        if (!model.containsAttribute("notFound")){
+        if (!model.containsAttribute("notFound")) {
             model.addAttribute("notFound", false);
         }
 
@@ -57,7 +62,7 @@ public class UserController {
                                RedirectAttributes redirectAttributes,
                                HttpSession httpSession) {
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel", bindingResult);
             redirectAttributes.addFlashAttribute("notFound", false);
@@ -66,7 +71,7 @@ public class UserController {
 
         UserServiceModel userServiceModel = this.userService.getUserByEmail(userLoginBindingModel.getEmail());
 
-        if (userServiceModel == null || !bCryptPasswordEncoder.matches(userLoginBindingModel.getPassword(), userServiceModel.getPassword())){
+        if (userServiceModel == null || !bCryptPasswordEncoder.matches(userLoginBindingModel.getPassword(), userServiceModel.getPassword())) {
             redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
             redirectAttributes.addFlashAttribute("notFound", true);
             return "redirect:/user/login";
@@ -77,7 +82,12 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String register(Model model) {
+    public String register(Model model,
+                           HttpSession httpSession) {
+
+        if (httpSession.getAttribute("user") != null) {
+            return "redirect:/";
+        }
 
         if (!model.containsAttribute("userRegisterBindingModel")) {
             model.addAttribute("userRegisterBindingModel", new UserRegisterBindingModel());
@@ -126,9 +136,9 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession httpSession){
+    public String logout(HttpSession httpSession) {
 
-        if (httpSession.getAttribute("user") != null){
+        if (httpSession.getAttribute("user") != null) {
             httpSession.invalidate();
         }
 

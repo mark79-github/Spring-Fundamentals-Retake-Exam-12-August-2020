@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,12 +50,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskServiceModel editProgress(TaskServiceModel taskServiceModel) {
+    public void editProgress(TaskServiceModel taskServiceModel) {
         Progress progress = taskServiceModel.getProgress();
         int nextOrdinal = (progress.ordinal() + 1) % Progress.values().length;
         List<Progress> progresses = Arrays.stream(Progress.values()).collect(Collectors.toList());
         taskServiceModel.setProgress(progresses.get(nextOrdinal));
-        Task task = this.taskRepository.saveAndFlush(this.modelMapper.map(taskServiceModel, Task.class));
-        return this.modelMapper.map(task, TaskServiceModel.class);
+        Task task = this.modelMapper.map(taskServiceModel, Task.class);
+        if (task.getDueDate().compareTo(LocalDate.now()) < 0) {
+            task.setDueDate(LocalDate.now());
+        }
+        if (nextOrdinal == Progress.values().length - 1) {
+            this.taskRepository.deleteById(task.getId());
+        } else {
+            this.taskRepository.save(task);
+        }
     }
 }

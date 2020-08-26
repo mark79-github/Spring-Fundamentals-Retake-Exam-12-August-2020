@@ -36,7 +36,13 @@ public class TaskController {
     }
 
     @GetMapping("/add")
-    public String add(Model model) {
+    public String add(Model model,
+                      HttpSession httpSession) {
+
+        if (httpSession.getAttribute("user") == null) {
+            return "redirect:/";
+        }
+
 
         if (!model.containsAttribute("taskAddBindingModel")) {
             model.addAttribute("taskAddBindingModel", new TaskAddBindingModel());
@@ -70,12 +76,13 @@ public class TaskController {
         return "redirect:/home";
     }
 
-    @PostMapping("/{id}")
-    public String progressConfirm(@PathVariable(name = "id") String id) {
+    @GetMapping("/{id}")
+    public String progressConfirm(@PathVariable(name = "id") String id,
+                                  HttpSession httpSession) {
 
         TaskServiceModel taskServiceModel = this.taskService.getTaskById(id);
 
-        if (taskServiceModel == null) {
+        if (taskServiceModel == null || httpSession.getAttribute("user") == null) {
             return "redirect:/home";
         }
 
